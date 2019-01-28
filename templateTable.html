@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    * {
+      font-size: 14px;
+      padding: 0;
+      margin: 0;
+    }
+    html, body {
+      height: 100%;
+    }
+    body {
+      background-color: #edf1f5;
+    }
+    .app {
+      height: 100%;
+      width: 100%;
+    }
+    .template-item {
+      display: block;
+      float: left;
+      width: calc(50% - 30px);
+      height: 289px;
+      margin: 10px 0 0 10px;
+      border: 1px solid #e1e1e3;
+      background-color: white;
+    }
+    .template-head {
+      padding: 10px 10px 10px 30px;
+      border-bottom: 1px solid #e1e1e3;
+      /*height: 35px;*/
+    }
+    .template-head-title {
+      font-weight: bold;
+    }
+    .template-content {
+      clear: both;
+    }
+    .template-content-line {
+      border-bottom: 1px solid #e1e1e3;
+      height: 30px;
+      display: block;
+      clear: both;
+      margin-left: 22px;
+    }
+    .template-content-item {
+      border-left: 3px solid white;
+      /*padding: 0 10px 0 22px;*/
+      /*padding-left: 22px;*/
+      /*margin-left: 22px;*/
+      margin-right: 10px;
+      height: 30px;
+      clear: both;
+      display: block;
+      cursor: pointer;
+    }
+    .template-content-item:hover {
+      background-color: #eaf2fe;
+      border-left: 3px solid #3e87f3;
+    }
+    .template-content-text {
+      width: calc(100% - 120px);
+      height: 30px;
+      line-height: 30px;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
+      float: left;
+    }
+    .template-content-time {
+      font-size: 12px;
+      color: #b2b2b2;
+      text-align: right;
+      height: 30px;
+      line-height: 30px;
+      width: 95px;
+      float: right;
+    }
+    .line {
+      width: 700px;
+      margin-left: calc(50% - 350px);
+      float: left;
+      margin-top: 10px;
+    }
+    .error-bar {
+      display: inline-block;
+      color:  red;
+    }
+  </style>
+  <script src="Vue-v2.5.17.js"></script>
+</head>
+<body>
+<template id="template-table" class="template-table">
+  <div class="template-item">
+    <div class="template-head">
+      <img :src="imgSrc">
+      <span class="template-head-title">{{ title }}</span>
+    </div>
+    <div class="template-content" v-if="isThisList">
+      <div v-for="(item, index) in content" class="template-content-item">
+        <span class="template-content-line">
+          <span class="template-content-text">{{ item.text }}</span>
+          <span class="template-content-time">{{ item.time }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+<template id="error-bar">
+  <div class="error-bar">
+    {{ errorMessage }}
+  </div>
+</template>
+<div id="app" class="app">
+  <!--<img :src="imgs[0]">-->
+  <template-table :img-src="imgs[0]" :title="titles[0]" :content="datas[dataId]" :is-this-list="lists[0]"></template-table>
+  <template-table :img-src="imgs[1]" :title="titles[1]" :content="datas[dataId]" :is-this-list="lists[1]"></template-table>
+  <template-table :img-src="imgs[2]" :title="titles[2]" :content="datas[dataId]" :is-this-list="lists[2]"></template-table>
+  <template-table :img-src="imgs[3]" :title="titles[3]" :content="datas[dataId]" :is-this-list="lists[3]"></template-table>
+  <div class="line">
+    <label>列表编号</label>
+    <div>
+        <!-- <input type="text" v-model.number="listId"> -->
+        <select v-model="listId">
+          <option value="0">列表1</option>
+          <option value="1">列表2</option>
+          <option value="2">列表3</option>
+          <option value="3">列表4</option>
+        </select>
+        <!-- <error-bar :error-message="listIdError"></error-bar> -->
+    </div>
+    <label>数据编号</label>
+    <div>
+      <!-- <input type="text" v-model.number="dataId"> -->
+      <select name="dataId" id="dataId" v-model="dataId">
+        <option value="0">数据1</option>
+        <option value="1">数据2</option>
+        <option value="2">数据3</option>
+        <option value="3">数据4</option>
+      </select>
+      <!-- <error-bar :error-message="dataIdError"></error-bar> -->
+    </div>
+    <!-- <button @click="submit">确定</button> -->
+  </div>
+  <!--<template-table :img-src="imgs[1]" :title="titles[1]" :content="datas" ></template-table>-->
+</div>
+<script>
+  Vue.component("template-table", {
+    props: ['img-src', 'title', 'content', 'is-this-list'],
+    template: "#template-table",
+    data: function () {
+      return {
+        // imgSrc: this.$props['img-src'],
+        height: this.$props['template-content-height'],
+        // isThisList: this.$props['is-this-list'],
+      }
+    }
+  });
+  Vue.component("error-bar", {
+    template: "#error-bar",
+    props: ['errorMessage'],
+  })
+  var vm = new Vue({
+    el: "#app",
+    data: {
+      imgs: [
+        "./img/pic1.png",
+        "./img/pic2.png",
+        "./img/pic3.png",
+        "./img/pic4.png",
+      ],
+      titles: [
+        "表彰奖励",
+        "典型先进",
+        "两学一做",
+        "警营文化",
+      ],
+      height: [
+        330,
+        330,
+        295,
+        295,
+      ],
+      datas: [[
+        {text:"1张怀明：扎根基层十余载 初心不改显忠诚", time:"2018-7-18 15:00"},
+        {text:"1贺勇：新官烧起了“两把火”", time:"2018-7-18 14:00"},
+        {text:"1杨军辉：警徽下释忠诚 二十余载励青春", time:"2018-7-8 12:00"},
+        {text:"1王正光：不忘初心 用平凡书写忠诚", time:"2018-7-8 15:00"},
+        {text:"1钱耀武：倒在抗雪保畅第一线的大队长", time:"2018-7-8 10:00"},
+        {text:"1丁进：克难攻坚勇于担当的派出所民警", time:"2018-7-18 14:00"},
+        {text:"1常开钱：忠诚敬业 守护辖区安宁", time:"2018-7-8 14:00"},
+        {text:"1穆瑞生：带病坚守工作岗位 贡献平凡力量", time:"2018-7-8 12:00"},
+      ],[
+        {text:"2张怀明：扎根基层十余载 初心不改显忠诚", time:"2018-7-18 15:00"},
+        {text:"2贺勇：新官烧起了“两把火”", time:"2018-7-18 14:00"},
+        {text:"2杨军辉：警徽下释忠诚 二十余载励青春", time:"2018-7-8 12:00"},
+        {text:"2王正光：不忘初心 用平凡书写忠诚", time:"2018-7-8 15:00"},
+        {text:"2钱耀武：倒在抗雪保畅第一线的大队长", time:"2018-7-8 10:00"},
+        {text:"2丁进：克难攻坚勇于担当的派出所民警", time:"2018-7-18 14:00"},
+        {text:"2常开钱：忠诚敬业 守护辖区安宁", time:"2018-7-8 14:00"},
+        {text:"2穆瑞生：带病坚守工作岗位 贡献平凡力量", time:"2018-7-8 12:00"},
+      ],[
+        {text:"3张怀明：扎根基层十余载 初心不改显忠诚", time:"2018-7-18 15:00"},
+        {text:"3贺勇：新官烧起了“两把火”", time:"2018-7-18 14:00"},
+        {text:"3杨军辉：警徽下释忠诚 二十余载励青春", time:"2018-7-8 12:00"},
+        {text:"3王正光：不忘初心 用平凡书写忠诚", time:"2018-7-8 15:00"},
+        {text:"3钱耀武：倒在抗雪保畅第一线的大队长", time:"2018-7-8 10:00"},
+        {text:"3丁进：克难攻坚勇于担当的派出所民警", time:"2018-7-18 14:00"},
+        {text:"3常开钱：忠诚敬业 守护辖区安宁", time:"2018-7-8 14:00"},
+        {text:"3穆瑞生：带病坚守工作岗位 贡献平凡力量", time:"2018-7-8 12:00"},
+      ],[
+        {text:"4张怀明：扎根基层十余载 初心不改显忠诚", time:"2018-7-18 15:00"},
+        {text:"4贺勇：新官烧起了“两把火”", time:"2018-7-18 14:00"},
+        {text:"4杨军辉：警徽下释忠诚 二十余载励青春", time:"2018-7-8 12:00"},
+        {text:"4王正光：不忘初心 用平凡书写忠诚", time:"2018-7-8 15:00"},
+        {text:"4钱耀武：倒在抗雪保畅第一线的大队长", time:"2018-7-8 10:00"},
+        {text:"4丁进：克难攻坚勇于担当的派出所民警", time:"2018-7-18 14:00"},
+        {text:"4常开钱：忠诚敬业 守护辖区安宁", time:"2018-7-8 14:00"},
+        {text:"4穆瑞生：带病坚守工作岗位 贡献平凡力量", time:"2018-7-8 12:00"},
+      ]],
+      listId: 0,
+      dataId: 0,
+      // lists: [
+      //   true,
+      //   true,
+      //   true,
+      //   true
+      // ],
+    },
+    methods: {
+      submit: function (e) {
+        console.log(this.listId);
+        console.log(this.dataId);
+      }
+    },
+    computed: {
+      lists: function () {
+        var lists = [false, false, false, false];
+        lists[this.listId] = true;
+        console.log(lists)
+        return lists
+      }
+    }
+    //   listIdError: function () {
+    //     if (this.listId > 4){
+    //       return "列表编号不可大于4";
+    //     }
+    //     else if (this.listId < 1) {
+    //       return "列表编号不可小于1";
+    //     }
+    //     else if (typeof(this.listId) != "number") {
+    //       return "列表编号必须为数字";
+    //     }
+    //     // else {
+    //       // return true;
+    //     // }
+    //   },
+    //   dataIdError: function () {
+    //     if (this.dataId > 4) {
+    //       return "数据编号不可大于4";
+    //     }
+    //     else if (this.dataId < 1) {
+    //       return "数据编号不可小于1";
+    //     }
+    //     else if (typeof(this.dataId) != "number") {
+    //       return "数据编号必须为数字";
+    //     }
+    //     // else {
+    //       // return true;
+    //     // }
+    //   }
+    // }
+    
+  });
+</script>
+</body>
+</html>
+
